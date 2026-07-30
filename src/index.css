@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer components {
+  .app-shell {
+    @apply mx-auto flex h-full max-w-md flex-col bg-white shadow-soft;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .safe-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+
+  .input-base {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 placeholder:text-slate-400 focus:border-whatsapp-accent focus:outline-none focus:ring-2 focus:ring-whatsapp-accent/30 disabled:bg-slate-100;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp-accent px-5 py-3 text-sm font-semibold text-white shadow-soft transition active:scale-[0.98] hover:bg-whatsapp-teal disabled:cursor-not-allowed disabled:opacity-60;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

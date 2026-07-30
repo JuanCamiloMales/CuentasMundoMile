@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: ¿el usuario actual está autorizado (su email está en la whitelist)?
+    function isAllowed() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/allowed_users/$(request.auth.token.email));
+    }
+
+    // Whitelist: solo lectura del propio registro, sin escrituras desde el cliente.
+    // La gestión de usuarios autorizados se hace desde Firebase Console.
+    match /allowed_users/{email} {
+      allow read: if request.auth != null
+        && request.auth.token.email == email;
+      allow write: if false;
+    }
+
+    // Colecciones principales: solo usuarios autorizados.
+    match /clients/{document} {
+      allow read, write: if isAllowed();
+    }
+
+    match /orders/{document} {
+      allow read, write: if isAllowed();
+    }
+
+    match /payments/{document} {
+      allow read, write: if isAllowed();
+    }
+  }
+}
