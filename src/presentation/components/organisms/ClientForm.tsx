@@ -39,6 +39,7 @@ export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', o
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(schema),
@@ -48,6 +49,9 @@ export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', o
       additionalInfo: defaultValues?.additionalInfo ?? '',
     },
   });
+
+  const phoneDigits = (watch('phone') ?? '').replace(/\D/g, '');
+  const showPhoneWarning = !errors.phone && phoneDigits.length > 0 && phoneDigits.length !== 10;
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitting(true);
@@ -79,6 +83,13 @@ export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', o
         </Label>
         <Input id="phone" type="tel" inputMode="tel" placeholder="Ej. 3001234567" {...register('phone')} hasError={Boolean(errors.phone)} />
         {errors.phone ? <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p> : null}
+        {showPhoneWarning ? (
+          <p className="mt-1 text-xs text-amber-600">
+            El teléfono tiene {phoneDigits.length}{' '}
+            {phoneDigits.length === 1 ? 'dígito' : 'dígitos'} (se esperaban 10). Puedes guardar de
+            todos modos.
+          </p>
+        ) : null}
       </div>
       <div>
         <Label htmlFor="additional-info">Información adicional</Label>

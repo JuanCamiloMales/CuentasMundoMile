@@ -26,6 +26,15 @@ export class CreateClientUseCase {
       throw new Error('La información adicional no puede tener más de 300 caracteres');
     }
 
+    const normalizedPhone = phone.replace(/\D/g, '');
+    if (normalizedPhone) {
+      const all = await this.repo.listAll();
+      const duplicate = all.find((c) => c.phone.replace(/\D/g, '') === normalizedPhone);
+      if (duplicate) {
+        throw new Error(`El teléfono ya está registrado para "${duplicate.name}"`);
+      }
+    }
+
     return this.repo.create({ name, phone, additionalInfo: additionalInfo || undefined });
   }
 }

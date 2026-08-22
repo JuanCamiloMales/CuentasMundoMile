@@ -33,6 +33,19 @@ export class UpdateClientUseCase {
       throw new Error('No hay datos para actualizar');
     }
 
+    if (data.phone !== undefined) {
+      const normalizedPhone = data.phone.replace(/\D/g, '');
+      if (normalizedPhone) {
+        const all = await this.repo.listAll();
+        const duplicate = all.find(
+          (c) => c.id !== id && c.phone.replace(/\D/g, '') === normalizedPhone,
+        );
+        if (duplicate) {
+          throw new Error(`El teléfono ya está registrado para "${duplicate.name}"`);
+        }
+      }
+    }
+
     return this.repo.update(id, data);
   }
 }

@@ -10,6 +10,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -67,6 +68,11 @@ export class FirestoreClientRepository implements IClientRepository {
         callback(null);
       },
     );
+  }
+
+  async listAll(): Promise<Client[]> {
+    const snap = await getDocs(query(this.col, orderBy('name', 'asc')));
+    return snap.docs.map((d) => toClient(d.id, d.data()));
   }
 
   async getById(id: string): Promise<Client | null> {
