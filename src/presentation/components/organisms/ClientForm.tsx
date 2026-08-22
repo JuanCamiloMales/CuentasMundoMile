@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Input } from '../atoms/Input';
 import { Label } from '../atoms/Label';
 import { Button } from '../atoms/Button';
+import { Textarea } from '../atoms/Textarea';
 import { container } from '@/presentation/di/container';
 
 const schema = z.object({
@@ -18,6 +19,7 @@ const schema = z.object({
     .trim()
     .min(1, 'El teléfono es obligatorio')
     .max(30, 'Máximo 30 caracteres'),
+  additionalInfo: z.string().trim().max(300, 'Máximo 300 caracteres'),
 });
 
 export type ClientFormValues = z.infer<typeof schema>;
@@ -43,6 +45,7 @@ export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', o
     defaultValues: {
       name: defaultValues?.name ?? '',
       phone: defaultValues?.phone ?? '',
+      additionalInfo: defaultValues?.additionalInfo ?? '',
     },
   });
 
@@ -76,6 +79,19 @@ export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', o
         </Label>
         <Input id="phone" type="tel" inputMode="tel" placeholder="Ej. 3001234567" {...register('phone')} hasError={Boolean(errors.phone)} />
         {errors.phone ? <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p> : null}
+      </div>
+      <div>
+        <Label htmlFor="additional-info">Información adicional</Label>
+        <Textarea
+          id="additional-info"
+          rows={3}
+          placeholder="Ej. dirección, preferencias, notas…"
+          {...register('additionalInfo')}
+          hasError={Boolean(errors.additionalInfo)}
+        />
+        {errors.additionalInfo ? (
+          <p className="mt-1 text-xs text-red-500">{errors.additionalInfo.message}</p>
+        ) : null}
       </div>
 
       {error ? <p className="text-sm text-red-500">{error}</p> : null}

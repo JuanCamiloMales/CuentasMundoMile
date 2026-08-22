@@ -21,6 +21,11 @@ export function ClientHeader({ client, onEdit }: ClientHeaderProps) {
         <Avatar name={client.name} size="xl" />
         <div className="min-w-0 flex-1">
           <h2 className="truncate text-xl font-bold text-slate-900">{client.name}</h2>
+          {client.additionalInfo ? (
+            <p className="mt-0.5 whitespace-pre-line break-words text-sm text-slate-500">
+              {client.additionalInfo}
+            </p>
+          ) : null}
           <a
             href={`tel:${client.phone}`}
             className="mt-0.5 block truncate text-sm text-slate-500 hover:text-whatsapp-accent"

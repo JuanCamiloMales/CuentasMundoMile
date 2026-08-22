@@ -14,7 +14,11 @@ export function EditClientPage() {
     <div className="p-4">
       <ClientForm
         clientId={id}
-        defaultValues={{ name: client.name, phone: client.phone }}
+        defaultValues={{
+          name: client.name,
+          phone: client.phone,
+          additionalInfo: client.additionalInfo ?? '',
+        }}
         submitLabel="Actualizar"
         onSuccess={() => navigate(-1)}
         onCancel={() => navigate(-1)}

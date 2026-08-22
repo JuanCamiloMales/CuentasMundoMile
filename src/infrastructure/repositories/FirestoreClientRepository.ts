@@ -27,6 +27,10 @@ const toClient = (id: string, data: Record<string, unknown>): Client => {
     id,
     name: String(data.name ?? ''),
     phone: String(data.phone ?? ''),
+    additionalInfo:
+      typeof data.additionalInfo === 'string' && data.additionalInfo.trim()
+        ? data.additionalInfo
+        : undefined,
     createdAt,
     updatedAt,
   };
@@ -76,6 +80,7 @@ export class FirestoreClientRepository implements IClientRepository {
     const ref = await addDoc(this.col, {
       name: input.name,
       phone: input.phone,
+      additionalInfo: input.additionalInfo ?? null,
       createdAt: now,
       updatedAt: now,
     });
@@ -85,10 +90,13 @@ export class FirestoreClientRepository implements IClientRepository {
 
   async update(id: string, input: UpdateClientInput): Promise<Client> {
     const ref = doc(db, FIRESTORE_COLLECTIONS.clients, id);
-    await updateDoc(ref, {
-      ...input,
-      updatedAt: serverTimestamp(),
-    });
+    const data: Record<string, unknown> = { updatedAt: serverTimestamp() };
+    if (input.name !== undefined) data.name = input.name;
+    if (input.phone !== undefined) data.phone = input.phone;
+    if (input.additionalInfo !== undefined) {
+      data.additionalInfo = input.additionalInfo || null;
+    }
+    await updateDoc(ref, data);
     const snap = await getDoc(ref);
     return toClient(ref.id, snap.data()!);
   }

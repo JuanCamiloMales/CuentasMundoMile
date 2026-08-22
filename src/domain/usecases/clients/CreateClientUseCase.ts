@@ -21,6 +21,11 @@ export class CreateClientUseCase {
       throw new Error('El teléfono no puede tener más de 30 caracteres');
     }
 
-    return this.repo.create({ name, phone });
+    const additionalInfo = input.additionalInfo?.trim();
+    if (additionalInfo && additionalInfo.length > 300) {
+      throw new Error('La información adicional no puede tener más de 300 caracteres');
+    }
+
+    return this.repo.create({ name, phone, additionalInfo: additionalInfo || undefined });
   }
 }

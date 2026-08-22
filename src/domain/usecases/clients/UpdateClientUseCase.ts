@@ -21,6 +21,14 @@ export class UpdateClientUseCase {
       data.phone = phone;
     }
 
+    if (input.additionalInfo !== undefined) {
+      const additionalInfo = (input.additionalInfo ?? '').trim();
+      if (additionalInfo.length > 300) {
+        throw new Error('La información adicional no puede tener más de 300 caracteres');
+      }
+      data.additionalInfo = additionalInfo || null;
+    }
+
     if (Object.keys(data).length === 0) {
       throw new Error('No hay datos para actualizar');
     }
