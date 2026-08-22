@@ -17,7 +17,6 @@ export interface ClientDetailOrganismProps {
   onNewPayment: () => void;
   onEditOrder: (orderId: string) => void;
   onEditPayment: (paymentId: string) => void;
-  onDeleted: () => void;
   errorFeedback?: ReactNode;
 }
 
@@ -30,7 +29,6 @@ export function ClientDetailOrganism({
   onNewPayment,
   onEditOrder,
   onEditPayment,
-  onDeleted,
   errorFeedback,
 }: ClientDetailOrganismProps) {
   const [tab, setTab] = useState<Tab>('orders');
@@ -54,16 +52,6 @@ export function ClientDetailOrganism({
     if (!confirm('¿Eliminar este abono?')) return;
     try {
       await container.useCases.deletePayment.execute(id);
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Error al eliminar');
-    }
-  };
-
-  const handleDeleteClient = async () => {
-    if (!confirm(`¿Eliminar a ${client.name}? Esta acción no se puede deshacer.`)) return;
-    try {
-      await container.useCases.deleteClient.execute(client.id);
-      onDeleted();
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Error al eliminar');
     }
@@ -123,16 +111,6 @@ export function ClientDetailOrganism({
             onDelete={handleDeletePayment}
           />
         )}
-      </div>
-
-      <div className="border-t border-slate-200 bg-white px-4 py-2">
-        <button
-          type="button"
-          onClick={handleDeleteClient}
-          className="block w-full rounded-full py-2 text-center text-xs font-medium text-red-500 hover:bg-red-50"
-        >
-          Eliminar cliente
-        </button>
       </div>
 
       {tab === 'orders' ? (
