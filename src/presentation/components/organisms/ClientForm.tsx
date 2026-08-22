@@ -23,13 +23,14 @@ const schema = z.object({
 export type ClientFormValues = z.infer<typeof schema>;
 
 export interface ClientFormProps {
+  clientId?: string;
   defaultValues?: Partial<ClientFormValues>;
   submitLabel?: string;
   onSuccess: (id: string) => void;
   onCancel?: () => void;
 }
 
-export function ClientForm({ defaultValues, submitLabel = 'Guardar', onSuccess, onCancel }: ClientFormProps) {
+export function ClientForm({ clientId, defaultValues, submitLabel = 'Guardar', onSuccess, onCancel }: ClientFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +50,9 @@ export function ClientForm({ defaultValues, submitLabel = 'Guardar', onSuccess, 
     setSubmitting(true);
     setError(null);
     try {
-      const client = await container.useCases.createClient.execute(values);
+      const client = clientId
+        ? await container.useCases.updateClient.execute(clientId, values)
+        : await container.useCases.createClient.execute(values);
       onSuccess(client.id);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error inesperado');

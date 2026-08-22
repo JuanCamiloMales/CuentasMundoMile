@@ -13,6 +13,7 @@ export function EditClientPage() {
   return (
     <div className="p-4">
       <ClientForm
+        clientId={id}
         defaultValues={{ name: client.name, phone: client.phone }}
         submitLabel="Actualizar"
         onSuccess={() => navigate(`/clientes/${id}`, { replace: true })}
