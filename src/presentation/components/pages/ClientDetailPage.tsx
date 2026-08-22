@@ -28,7 +28,9 @@ export function ClientDetailPage() {
       client={client}
       onEdit={() => navigate(`/clientes/${id}/editar`)}
       onNewOrder={() => navigate(`/clientes/${id}/pedidos/nuevo`)}
+      onEditOrder={(orderId) => navigate(`/clientes/${id}/pedidos/${orderId}/editar`)}
       onNewPayment={() => navigate(`/clientes/${id}/abonos/nuevo`)}
+      onEditPayment={(paymentId) => navigate(`/clientes/${id}/abonos/${paymentId}/editar`)}
       onDeleted={() => navigate('/', { replace: true })}
     />
   );

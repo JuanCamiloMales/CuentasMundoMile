@@ -1,4 +1,4 @@
-import { Package, Trash2 } from 'lucide-react';
+import { Package, Pencil, Trash2 } from 'lucide-react';
 import type { Order, OrderItem as OrderItemEntity } from '@/domain';
 import { formatCurrency } from '@/presentation/utils';
 import { formatDate } from '@/presentation/utils/formatDate';
@@ -6,10 +6,11 @@ import { Badge } from '../atoms/Badge';
 
 export interface OrderItemRowProps {
   order: Order;
+  onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
-export function OrderItemRow({ order, onDelete }: OrderItemRowProps) {
+export function OrderItemRow({ order, onEdit, onDelete }: OrderItemRowProps) {
   const items = order.items as OrderItemEntity[];
 
   return (
@@ -40,15 +41,26 @@ export function OrderItemRow({ order, onDelete }: OrderItemRowProps) {
         ))}
       </ul>
 
-      {onDelete ? (
-        <div className="mt-3 flex justify-end">
-          <button
-            type="button"
-            onClick={() => onDelete(order.id)}
-            className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-red-500 transition hover:bg-red-50"
-          >
-            <Trash2 size={14} /> Eliminar
-          </button>
+      {onEdit || onDelete ? (
+        <div className="mt-3 flex justify-end gap-1">
+          {onEdit ? (
+            <button
+              type="button"
+              onClick={() => onEdit(order.id)}
+              className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100"
+            >
+              <Pencil size={14} /> Editar
+            </button>
+          ) : null}
+          {onDelete ? (
+            <button
+              type="button"
+              onClick={() => onDelete(order.id)}
+              className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-red-500 transition hover:bg-red-50"
+            >
+              <Trash2 size={14} /> Eliminar
+            </button>
+          ) : null}
         </div>
       ) : null}
     </div>

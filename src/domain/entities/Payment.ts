@@ -18,3 +18,10 @@ export interface CreatePaymentInput {
   paymentMethod: PaymentMethod;
   note?: string;
 }
+
+export interface UpdatePaymentInput {
+  date?: Date;
+  amount?: number;
+  paymentMethod?: PaymentMethod;
+  note?: string;
+}

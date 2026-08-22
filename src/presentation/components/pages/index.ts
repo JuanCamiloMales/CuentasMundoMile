@@ -3,6 +3,8 @@ export * from './NewClientPage';
 export * from './EditClientPage';
 export * from './ClientDetailPage';
 export * from './NewOrderPage';
+export * from './EditOrderPage';
 export * from './NewPaymentPage';
+export * from './EditPaymentPage';
 export * from './SummaryPage';
 export * from './LoginPage';

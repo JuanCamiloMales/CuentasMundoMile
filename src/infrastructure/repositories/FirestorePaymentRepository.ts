@@ -3,6 +3,7 @@ import type {
   IPaymentRepository,
   Payment,
   PaymentMethod,
+  UpdatePaymentInput,
 } from '@/domain';
 import {
   addDoc,
@@ -14,6 +15,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
   type Timestamp,
 } from 'firebase/firestore';
@@ -62,6 +64,12 @@ export class FirestorePaymentRepository implements IPaymentRepository {
     );
   }
 
+  async getById(id: string): Promise<Payment | null> {
+    const ref = doc(db, FIRESTORE_COLLECTIONS.payments, id);
+    const snap = await getDoc(ref);
+    return snap.exists() ? toPayment(snap.id, snap.data()) : null;
+  }
+
   async create(input: CreatePaymentInput): Promise<Payment> {
     const now = serverTimestamp();
     const ref = await addDoc(this.col, {
@@ -73,6 +81,18 @@ export class FirestorePaymentRepository implements IPaymentRepository {
       createdAt: now,
       updatedAt: now,
     });
+    const snap = await getDoc(ref);
+    return toPayment(ref.id, snap.data()!);
+  }
+
+  async update(id: string, input: UpdatePaymentInput): Promise<Payment> {
+    const ref = doc(db, FIRESTORE_COLLECTIONS.payments, id);
+    const data: Record<string, unknown> = { updatedAt: serverTimestamp() };
+    if (input.date !== undefined) data.date = input.date;
+    if (input.amount !== undefined) data.amount = input.amount;
+    if (input.paymentMethod !== undefined) data.paymentMethod = input.paymentMethod;
+    if (input.note !== undefined) data.note = input.note ?? null;
+    await updateDoc(ref, data);
     const snap = await getDoc(ref);
     return toPayment(ref.id, snap.data()!);
   }

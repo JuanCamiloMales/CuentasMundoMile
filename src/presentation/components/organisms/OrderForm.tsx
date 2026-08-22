@@ -9,15 +9,31 @@ import { container } from '@/presentation/di/container';
 
 export interface OrderFormProps {
   clientId: string;
+  orderId?: string;
+  defaultDate?: Date;
+  defaultItems?: OrderItem[];
+  submitLabel?: string;
   onSuccess: () => void;
   onCancel?: () => void;
 }
 
 const emptyItem: OrderItem = { productName: '', unitPrice: 0, quantity: 1 };
 
-export function OrderForm({ clientId, onSuccess, onCancel }: OrderFormProps) {
-  const [date, setDate] = useState<Date>(new Date());
-  const [items, setItems] = useState<OrderItem[]>([{ ...emptyItem }]);
+export function OrderForm({
+  clientId,
+  orderId,
+  defaultDate,
+  defaultItems,
+  submitLabel = 'Guardar pedido',
+  onSuccess,
+  onCancel,
+}: OrderFormProps) {
+  const [date, setDate] = useState<Date>(defaultDate ?? new Date());
+  const [items, setItems] = useState<OrderItem[]>(
+    defaultItems && defaultItems.length > 0
+      ? defaultItems.map((it) => ({ ...it }))
+      : [{ ...emptyItem }],
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +54,11 @@ export function OrderForm({ clientId, onSuccess, onCancel }: OrderFormProps) {
     setError(null);
     try {
       setSubmitting(true);
-      await container.useCases.createOrder.execute({ clientId, date, items });
+      if (orderId) {
+        await container.useCases.updateOrder.execute(orderId, { date, items });
+      } else {
+        await container.useCases.createOrder.execute({ clientId, date, items });
+      }
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error inesperado');
@@ -94,7 +114,7 @@ export function OrderForm({ clientId, onSuccess, onCancel }: OrderFormProps) {
           </Button>
         ) : null}
         <Button type="submit" fullWidth disabled={submitting}>
-          {submitting ? 'Guardando…' : 'Guardar pedido'}
+          {submitting ? 'Guardando…' : submitLabel}
         </Button>
       </div>
     </form>

@@ -6,10 +6,11 @@ import { EmptyState } from '../atoms/EmptyState';
 export interface OrdersListProps {
   orders: Order[];
   loading?: boolean;
+  onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
-export function OrdersList({ orders, loading, onDelete }: OrdersListProps) {
+export function OrdersList({ orders, loading, onEdit, onDelete }: OrdersListProps) {
   if (loading) {
     return <div className="p-6 text-center text-slate-400">Cargando pedidos…</div>;
   }
@@ -25,7 +26,7 @@ export function OrdersList({ orders, loading, onDelete }: OrdersListProps) {
   return (
     <div>
       {orders.map((o) => (
-        <OrderItemRow key={o.id} order={o} onDelete={onDelete} />
+        <OrderItemRow key={o.id} order={o} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );

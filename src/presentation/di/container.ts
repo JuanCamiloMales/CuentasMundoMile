@@ -9,12 +9,16 @@ import {
   DeletePaymentUseCase,
   GetClientUseCase,
   GetClientsUseCase,
+  GetOrderByIdUseCase,
   GetOrdersByClientUseCase,
+  GetPaymentByIdUseCase,
   GetPaymentsByClientUseCase,
   SignInWithGoogleUseCase,
   SignOutUseCase,
   SubscribeAuthUseCase,
   UpdateClientUseCase,
+  UpdateOrderUseCase,
+  UpdatePaymentUseCase,
 } from '@/domain';
 import {
   FirestoreAuthRepository,
@@ -44,10 +48,14 @@ export const container = {
 
     createOrder: new CreateOrderUseCase(orderRepo),
     getOrdersByClient: new GetOrdersByClientUseCase(orderRepo),
+    getOrderById: new GetOrderByIdUseCase(orderRepo),
+    updateOrder: new UpdateOrderUseCase(orderRepo),
     deleteOrder: new DeleteOrderUseCase(orderRepo),
 
     createPayment: new CreatePaymentUseCase(paymentRepo),
     getPaymentsByClient: new GetPaymentsByClientUseCase(paymentRepo),
+    getPaymentById: new GetPaymentByIdUseCase(paymentRepo),
+    updatePayment: new UpdatePaymentUseCase(paymentRepo),
     deletePayment: new DeletePaymentUseCase(paymentRepo),
 
     calculateClientBalance: new CalculateClientBalanceUseCase(orderRepo, paymentRepo),

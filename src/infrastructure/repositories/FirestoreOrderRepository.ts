@@ -3,6 +3,7 @@ import type {
   IOrderRepository,
   Order,
   OrderItem,
+  UpdateOrderInput,
 } from '@/domain';
 import {
   addDoc,
@@ -14,6 +15,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
   type Timestamp,
 } from 'firebase/firestore';
@@ -64,6 +66,12 @@ export class FirestoreOrderRepository implements IOrderRepository {
     );
   }
 
+  async getById(id: string): Promise<Order | null> {
+    const ref = doc(db, FIRESTORE_COLLECTIONS.orders, id);
+    const snap = await getDoc(ref);
+    return snap.exists() ? toOrder(snap.id, snap.data()) : null;
+  }
+
   async create(input: CreateOrderInput): Promise<Order> {
     const total = computeTotal(input.items);
     const now = serverTimestamp();
@@ -75,6 +83,19 @@ export class FirestoreOrderRepository implements IOrderRepository {
       createdAt: now,
       updatedAt: now,
     });
+    const snap = await getDoc(ref);
+    return toOrder(ref.id, snap.data()!);
+  }
+
+  async update(id: string, input: UpdateOrderInput): Promise<Order> {
+    const ref = doc(db, FIRESTORE_COLLECTIONS.orders, id);
+    const data: Record<string, unknown> = { updatedAt: serverTimestamp() };
+    if (input.date !== undefined) data.date = input.date;
+    if (input.items !== undefined) {
+      data.items = input.items;
+      data.total = computeTotal(input.items);
+    }
+    await updateDoc(ref, data);
     const snap = await getDoc(ref);
     return toOrder(ref.id, snap.data()!);
   }

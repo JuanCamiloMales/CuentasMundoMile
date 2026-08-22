@@ -15,6 +15,8 @@ export interface ClientDetailOrganismProps {
   onEdit: () => void;
   onNewOrder: () => void;
   onNewPayment: () => void;
+  onEditOrder: (orderId: string) => void;
+  onEditPayment: (paymentId: string) => void;
   onDeleted: () => void;
   errorFeedback?: ReactNode;
 }
@@ -26,6 +28,8 @@ export function ClientDetailOrganism({
   onEdit,
   onNewOrder,
   onNewPayment,
+  onEditOrder,
+  onEditPayment,
   onDeleted,
   errorFeedback,
 }: ClientDetailOrganismProps) {
@@ -105,9 +109,19 @@ export function ClientDetailOrganism({
 
       <div className="flex-1 overflow-y-auto bg-slate-50">
         {tab === 'orders' ? (
-          <OrdersList orders={orders as Order[]} loading={ordersLoading} onDelete={handleDeleteOrder} />
+          <OrdersList
+            orders={orders as Order[]}
+            loading={ordersLoading}
+            onEdit={onEditOrder}
+            onDelete={handleDeleteOrder}
+          />
         ) : (
-          <PaymentsList payments={payments as Payment[]} loading={paymentsLoading} onDelete={handleDeletePayment} />
+          <PaymentsList
+            payments={payments as Payment[]}
+            loading={paymentsLoading}
+            onEdit={onEditPayment}
+            onDelete={handleDeletePayment}
+          />
         )}
       </div>
 

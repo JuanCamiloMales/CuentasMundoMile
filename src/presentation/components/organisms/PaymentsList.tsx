@@ -6,10 +6,11 @@ import { EmptyState } from '../atoms/EmptyState';
 export interface PaymentsListProps {
   payments: Payment[];
   loading?: boolean;
+  onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
-export function PaymentsList({ payments, loading, onDelete }: PaymentsListProps) {
+export function PaymentsList({ payments, loading, onEdit, onDelete }: PaymentsListProps) {
   if (loading) {
     return <div className="p-6 text-center text-slate-400">Cargando abonos…</div>;
   }
@@ -25,7 +26,7 @@ export function PaymentsList({ payments, loading, onDelete }: PaymentsListProps)
   return (
     <div>
       {payments.map((p) => (
-        <PaymentItemRow key={p.id} payment={p} onDelete={onDelete} />
+        <PaymentItemRow key={p.id} payment={p} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );

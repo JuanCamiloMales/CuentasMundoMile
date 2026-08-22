@@ -13,17 +13,36 @@ import { container } from '@/presentation/di/container';
 
 export interface PaymentFormProps {
   clientId: string;
+  paymentId?: string;
+  defaultValues?: {
+    date?: Date;
+    amount?: number;
+    paymentMethod?: PaymentMethod;
+    note?: string;
+  };
+  submitLabel?: string;
   onSuccess: () => void;
   onCancel?: () => void;
 }
 
-export function PaymentForm({ clientId, onSuccess, onCancel }: PaymentFormProps) {
+export function PaymentForm({
+  clientId,
+  paymentId,
+  defaultValues,
+  submitLabel = 'Registrar abono',
+  onSuccess,
+  onCancel,
+}: PaymentFormProps) {
   const balance = useBalance(clientId);
-  const debt = Math.max(0, balance.balance);
-  const [date, setDate] = useState<Date>(new Date());
-  const [amount, setAmount] = useState<string>('');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('efectivo');
-  const [note, setNote] = useState<string>('');
+  const debt = paymentId ? 0 : Math.max(0, balance.balance);
+  const [date, setDate] = useState<Date>(defaultValues?.date ?? new Date());
+  const [amount, setAmount] = useState<string>(
+    defaultValues?.amount !== undefined ? String(defaultValues.amount) : '',
+  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    defaultValues?.paymentMethod ?? 'efectivo',
+  );
+  const [note, setNote] = useState<string>(defaultValues?.note ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,13 +58,22 @@ export function PaymentForm({ clientId, onSuccess, onCancel }: PaymentFormProps)
 
     try {
       setSubmitting(true);
-      await container.useCases.createPayment.execute({
-        clientId,
-        date,
-        amount: numericAmount,
-        paymentMethod,
-        note: note.trim() || undefined,
-      });
+      if (paymentId) {
+        await container.useCases.updatePayment.execute(paymentId, {
+          date,
+          amount: numericAmount,
+          paymentMethod,
+          note: note.trim() || undefined,
+        });
+      } else {
+        await container.useCases.createPayment.execute({
+          clientId,
+          date,
+          amount: numericAmount,
+          paymentMethod,
+          note: note.trim() || undefined,
+        });
+      }
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error inesperado');
@@ -125,7 +153,7 @@ export function PaymentForm({ clientId, onSuccess, onCancel }: PaymentFormProps)
           </Button>
         ) : null}
         <Button type="submit" fullWidth disabled={submitting}>
-          {submitting ? 'Guardando…' : 'Registrar abono'}
+          {submitting ? 'Guardando…' : submitLabel}
         </Button>
       </div>
     </form>

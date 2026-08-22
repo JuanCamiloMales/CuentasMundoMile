@@ -15,11 +15,15 @@ export function MainLayout() {
       ? 'Nuevo cliente'
       : location.pathname.includes('/pedidos/nuevo')
         ? 'Nuevo pedido'
-        : location.pathname.includes('/abonos/nuevo')
-          ? 'Nuevo abono'
-          : location.pathname.includes('/editar')
-            ? 'Editar cliente'
-            : 'Clientes';
+        : location.pathname.includes('/pedidos') && location.pathname.endsWith('/editar')
+          ? 'Editar pedido'
+          : location.pathname.includes('/abonos/nuevo')
+            ? 'Nuevo abono'
+            : location.pathname.includes('/abonos') && location.pathname.endsWith('/editar')
+              ? 'Editar abono'
+              : location.pathname.includes('/editar')
+                ? 'Editar cliente'
+                : 'Clientes';
 
   const showHeader = !isHome;
 

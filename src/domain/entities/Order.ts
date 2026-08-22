@@ -19,3 +19,8 @@ export interface CreateOrderInput {
   date: Date;
   items: OrderItem[];
 }
+
+export interface UpdateOrderInput {
+  date?: Date;
+  items?: OrderItem[];
+}
