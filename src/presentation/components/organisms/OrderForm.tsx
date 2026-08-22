@@ -52,11 +52,8 @@ export function OrderForm({ clientId, onSuccess, onCancel }: OrderFormProps) {
       <DateField id="order-date" label="Fecha" value={date} onChange={setDate} required />
 
       <div>
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-2">
           <span className="text-sm font-medium text-slate-700">Productos *</span>
-          <Button type="button" variant="ghost" size="sm" onClick={addItem} leftIcon={<Plus size={14} />}>
-            Agregar
-          </Button>
         </div>
         <div className="space-y-2">
           {items.map((item, idx) => (
@@ -70,6 +67,17 @@ export function OrderForm({ clientId, onSuccess, onCancel }: OrderFormProps) {
             />
           ))}
         </div>
+        <Button
+          type="button"
+          variant="secondary"
+          fullWidth
+          className="mt-2"
+          leftIcon={<Plus size={16} />}
+          onClick={addItem}
+          disabled={submitting}
+        >
+          Agregar producto
+        </Button>
       </div>
 
       <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3">
