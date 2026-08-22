@@ -11,7 +11,7 @@ export function NewOrderPage() {
     <div className="p-4">
       <OrderForm
         clientId={id}
-        onSuccess={() => navigate(`/clientes/${id}`, { replace: true })}
+        onSuccess={() => navigate(-1)}
         onCancel={() => navigate(-1)}
       />
     </div>

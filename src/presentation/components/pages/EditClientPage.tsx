@@ -16,7 +16,7 @@ export function EditClientPage() {
         clientId={id}
         defaultValues={{ name: client.name, phone: client.phone }}
         submitLabel="Actualizar"
-        onSuccess={() => navigate(`/clientes/${id}`, { replace: true })}
+        onSuccess={() => navigate(-1)}
         onCancel={() => navigate(-1)}
       />
     </div>

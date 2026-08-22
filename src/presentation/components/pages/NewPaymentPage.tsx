@@ -11,7 +11,7 @@ export function NewPaymentPage() {
     <div className="p-4">
       <PaymentForm
         clientId={id}
-        onSuccess={() => navigate(`/clientes/${id}`, { replace: true })}
+        onSuccess={() => navigate(-1)}
         onCancel={() => navigate(-1)}
       />
     </div>
