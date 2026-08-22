@@ -12,18 +12,16 @@ export function SummaryPanel() {
 
   const totals = useMemo(() => {
     let totalDebt = 0;
-    let totalOrders = 0;
-    let totalPayments = 0;
     let debtors = 0;
     for (const c of clients) {
       const s = summary[c.id];
       if (!s) continue;
-      totalOrders += s.balance > 0 ? s.balance : 0;
-      totalDebt += s.balance;
-      totalPayments += Math.max(0, -s.balance);
-      if (s.balance > 0) debtors += 1;
+      if (s.balance > 0) {
+        totalDebt += s.balance;
+        debtors += 1;
+      }
     }
-    return { totalDebt, totalOrders, totalPayments, debtors };
+    return { totalDebt, debtors };
   }, [clients, summary]);
 
   if (clientsLoading || summaryLoading) {
@@ -49,22 +47,11 @@ export function SummaryPanel() {
             {totals.totalDebt > 0 ? 'Por cobrar' : 'Al día'}
           </Badge>
         </div>
-        <p className="mt-2 text-3xl font-bold text-slate-900">{formatCurrency(Math.max(0, totals.totalDebt))}</p>
+        <p className="mt-2 text-3xl font-bold text-slate-900">{formatCurrency(totals.totalDebt)}</p>
         <p className="mt-1 text-xs text-slate-500">
           {totals.debtors} {totals.debtors === 1 ? 'cliente debe' : 'clientes deben'}
         </p>
       </Card>
-
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-slate-500">Pedidos</p>
-          <p className="mt-1 text-xl font-bold text-slate-900">{formatCurrency(totals.totalOrders)}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-slate-500">Abonos</p>
-          <p className="mt-1 text-xl font-bold text-slate-900">{formatCurrency(totals.totalPayments)}</p>
-        </Card>
-      </div>
 
       <Card>
         <div className="mb-2 flex items-center gap-2">
@@ -76,7 +63,6 @@ export function SummaryPanel() {
             .map((c) => ({ ...c, balance: summary[c.id]?.balance ?? 0 }))
             .filter((c) => c.balance > 0)
             .sort((a, b) => b.balance - a.balance)
-            .slice(0, 5)
             .map((c) => (
               <li key={c.id} className="flex items-center justify-between text-sm">
                 <span className="truncate">{c.name}</span>
