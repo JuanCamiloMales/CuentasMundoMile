@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { Banknote } from 'lucide-react';
 import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, type PaymentMethod } from '@/domain';
+import { useBalance } from '@/presentation/hooks';
+import { formatCurrency } from '@/presentation/utils';
 import { Button } from '../atoms/Button';
 import { Input } from '../atoms/Input';
 import { Label } from '../atoms/Label';
@@ -15,6 +18,8 @@ export interface PaymentFormProps {
 }
 
 export function PaymentForm({ clientId, onSuccess, onCancel }: PaymentFormProps) {
+  const balance = useBalance(clientId);
+  const debt = Math.max(0, balance.balance);
   const [date, setDate] = useState<Date>(new Date());
   const [amount, setAmount] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('efectivo');
@@ -68,6 +73,19 @@ export function PaymentForm({ clientId, onSuccess, onCancel }: PaymentFormProps)
           onChange={(e) => setAmount(e.target.value)}
           autoFocus
         />
+        {debt > 0 ? (
+          <Button
+            type="button"
+            variant="secondary"
+            fullWidth
+            className="mt-2"
+            leftIcon={<Banknote size={18} />}
+            onClick={() => setAmount(String(debt))}
+            disabled={submitting}
+          >
+            Pagar todo lo que se debe ({formatCurrency(debt)})
+          </Button>
+        ) : null}
       </div>
 
       <div>
