@@ -11,7 +11,7 @@ export function LoginPage() {
   if (status === 'denied') return <Navigate to="/" replace />;
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-12">
+    <div className="safe-top flex min-h-full flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 px-6 pb-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-whatsapp-accent text-white shadow-soft">

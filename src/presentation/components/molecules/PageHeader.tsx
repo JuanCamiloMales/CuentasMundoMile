@@ -15,7 +15,7 @@ export function PageHeader({ title, subtitle, right, back, className = '' }: Pag
   return (
     <header
       className={[
-        'safe-top sticky top-0 z-20 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3',
+        'sticky top-0 z-20 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3',
         className,
       ].join(' ')}
     >

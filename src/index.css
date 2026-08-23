@@ -18,6 +18,7 @@ body {
 @layer components {
   .app-shell {
     @apply mx-auto flex h-full max-w-md flex-col bg-white shadow-soft;
+    padding-top: env(safe-area-inset-top);
   }
 
   .safe-bottom {
