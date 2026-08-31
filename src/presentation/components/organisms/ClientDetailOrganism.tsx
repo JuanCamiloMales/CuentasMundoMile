@@ -113,11 +113,12 @@ export function ClientDetailOrganism({
         )}
       </div>
 
-      {tab === 'orders' ? (
-        <FAB icon={<Package size={22} />} label="Nuevo pedido" onClick={onNewOrder} />
-      ) : (
-        <FAB icon={<ShoppingBag size={22} />} label="Nuevo abono" onClick={onNewPayment} />
-      )}
+      <FAB
+        icon={tab === 'orders' ? <Package size={22} /> : <ShoppingBag size={22} />}
+        label={tab === 'orders' ? 'Nuevo pedido' : 'Nuevo bono'}
+        storageKey={tab === 'orders' ? 'fab:order' : 'fab:payment'}
+        onClick={tab === 'orders' ? onNewOrder : onNewPayment}
+      />
     </div>
   );
 }

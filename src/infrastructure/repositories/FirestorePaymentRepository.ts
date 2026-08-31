@@ -5,6 +5,7 @@ import type {
   PaymentMethod,
   UpdatePaymentInput,
 } from '@/domain';
+import { PAYMENT_METHODS } from '@/domain';
 import {
   addDoc,
   collection,
@@ -23,7 +24,7 @@ import { db } from '../firebase/config';
 import { FIRESTORE_COLLECTIONS } from '../firebase/collections';
 
 const isPaymentMethod = (v: unknown): v is PaymentMethod =>
-  v === 'efectivo' || v === 'transferencia' || v === 'tarjeta' || v === 'otro';
+  typeof v === 'string' && (PAYMENT_METHODS as readonly string[]).includes(v);
 
 const toPayment = (id: string, data: Record<string, unknown>): Payment => {
   const date = (data.date as Timestamp | undefined)?.toDate() ?? new Date();

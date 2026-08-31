@@ -57,7 +57,12 @@ export function ClientsPage() {
       <div className="flex-1 overflow-y-auto bg-white">
         <ClientList query={query} />
       </div>
-      <FAB icon={<Plus size={22} />} label="Nuevo cliente" onClick={() => navigate('/clientes/nuevo')} />
+      <FAB
+        icon={<Plus size={22} />}
+        label="Nuevo cliente"
+        storageKey="fab:client"
+        onClick={() => navigate('/clientes/nuevo')}
+      />
     </div>
   );
 }
